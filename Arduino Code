@@ -1,0 +1,187 @@
+#include <NewPing.h>
+#include <Servo.h>
+#include <AFMotor.h>
+
+// HC-SR04 Sensor
+#define TRIGGER_PIN A5
+#define ECHO_PIN A4
+#define max_distance 50
+
+// IR Sensor
+#define irLeft A1
+#define irRight A2
+
+// Motor
+#define MAX_SPEED 200
+#define MAX_SPEED_OFFSET 20
+
+Servo servo;
+
+// Create NewPing object for distance sensor
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, max_distance);
+
+// Motors (only two motors)
+AF_DCMotor motor1(1, MOTOR12_1KHZ);  // Left Motor
+AF_DCMotor motor2(2, MOTOR12_1KHZ);  // Right Motor
+
+int distance = 0;
+int leftDistance;
+int rightDistance;
+
+boolean object;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(irLeft, INPUT);
+  pinMode(irRight, INPUT);
+  servo.attach(10);
+  servo.write(90);  // Initialize servo to middle position
+
+  // Set motor speed
+  motor1.setSpeed(120);
+  motor2.setSpeed(120);
+}
+
+void loop() {
+  if (digitalRead(irLeft) == 1 && digitalRead(irRight) == 1) {
+    objectAvoid();
+    // Move forward if both sensors are reading white (inactive)
+  }
+  else if (digitalRead(irLeft) == 1 && digitalRead(irRight) == 0) {
+    objectAvoid();
+    Serial.println("Turn Left");
+    // Turn left if left sensor is white and right sensor is black
+    moveLeft();
+  }
+  else if (digitalRead(irLeft) == 0 && digitalRead(irRight) == 1) {
+    objectAvoid();
+    Serial.println("Turn Right");
+    // Turn right if left sensor is black and right sensor is white
+    moveRight();
+  }
+  else if (digitalRead(irLeft) == 0 && digitalRead(irRight) == 0) {
+    // Stop if both sensors detect black
+    Stop();
+  }
+}
+
+void objectAvoid() {
+  distance = getDistance();
+  if (distance <= 15) {
+    // Stop if an object is detected within 15cm
+    Stop();
+    Serial.println("Stop");
+
+    // Look left and right to check for the best direction
+    lookLeft();
+    lookRight();
+    delay(100);
+
+    if (rightDistance <= leftDistance) {
+      // If right side is closer, move left
+      object = true;
+      turn();
+      Serial.println("Move Left");
+    } else {
+      // If left side is closer, move right
+      object = false;
+      turn();
+      Serial.println("Move Right");
+    }
+    delay(100);
+  }
+  else {
+    // Move forward if no obstacle detected
+    Serial.println("Move Forward");
+    moveForward();
+  }
+}
+
+int getDistance() {
+  delay(50);
+  int cm = sonar.ping_cm();
+  if (cm == 0) {
+    cm = 100;  // Return a large value if no distance is detected
+  }
+  return cm;
+}
+
+int lookLeft() {
+  // Look to the left
+  servo.write(150);
+  delay(500);
+  leftDistance = getDistance();
+  delay(100);
+  servo.write(90);  // Reset to center position
+  Serial.print("Left: ");
+  Serial.println(leftDistance);
+  return leftDistance;
+}
+
+int lookRight() {
+  // Look to the right
+  servo.write(30);
+  delay(500);
+  rightDistance = getDistance();
+  delay(100);
+  servo.write(90);  // Reset to center position
+  Serial.print("Right: ");
+  Serial.println(rightDistance);
+  return rightDistance;
+}
+
+void Stop() {
+  motor1.run(RELEASE);  // Stop left motor
+  motor2.run(RELEASE);  // Stop right motor
+}
+
+void moveForward() {
+  motor1.run(FORWARD);  // Move left motor forward
+  motor2.run(FORWARD);  // Move right motor forward
+}
+
+void moveBackward() {
+  motor1.run(BACKWARD);  // Move left motor backward
+  motor2.run(BACKWARD);  // Move right motor backward
+}
+
+void turn() {
+  if (object == false) {
+    Serial.println("Turn Right");
+    moveRight();
+    delay(700);
+    moveForward();
+    delay(800);
+    moveLeft();
+    delay(900);
+    if (digitalRead(irRight) == 1) {
+      loop();
+    } else {
+      moveForward();
+    }
+  }
+  else {
+    Serial.println("Turn Left");
+    moveLeft();
+    delay(700);
+    moveForward();
+    delay(800);
+    moveRight();
+    delay(900);
+    if (digitalRead(irLeft) == 1) {
+      loop();
+    } else {
+      moveForward();
+    }
+  }
+}
+
+void moveRight() {
+  motor1.run(BACKWARD);  // Left motor backward
+  motor2.run(FORWARD);   // Right motor forward
+}
+
+void moveLeft() {
+  motor1.run(FORWARD);   // Left motor forward
+  motor2.run(BACKWARD);  // Right motor backward
+}
