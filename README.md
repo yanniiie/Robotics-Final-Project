@@ -37,6 +37,10 @@ This project involves building an obstacle-avoidance line-following robot using 
    - Connect servo signal pin to Arduino pin `10`.
 5. Power connections: Ensure proper voltage and current supply to the motors and sensors.
 
+   ```Circuit Diagram```
+
+   ![![image](https://github.com/user-attachments/assets/f9cc870e-0280-4cd7-9ce0-62f7825633e2)]
+
 ### Software Requirements
 - Install the **AFMotor** library for motor control.
 - Install the **NewPing** library for ultrasonic sensor functionality.
@@ -84,9 +88,9 @@ This project is open-source under the MIT License. Feel free to use, modify, and
 For any questions or contributions, please reach out via GitHub.
 
 
-```Circuit Diagram```
 
-![photo_5426849190799075003_y](https://github.com/user-attachments/assets/82371155-6c3a-43cf-a8af-b2e98c73bdbd)
+
+
 
 
 
