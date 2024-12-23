@@ -24,23 +24,23 @@ This project involves building an obstacle-avoidance line-following robot using 
 - Power source (e.g., 2x batteries 3.7V)
 
 ### Circuit Connections
-1. First attach a motor driver shield onto the arduino.
+1. First attach a **motor driver shield** onto the **arduino**.
 
-2. Now connect the dc motor's to the l293d motor driver shield.
+2. Now connect the **dc motor's** to the **l293d motor driver shield**.
 
    - Motor 1 to motor driver M1
    - Motor 2 to motor driver M2
 
-3. Connect the IR sensor to motor driver.
+3. Connect the **IR sensor** to **motor driver**.
 
    - IR sensor OUT pin is connected to motor driver A1 pin.
    - IR sensor GND pin is connected to motor driver GND pin.
    - IR sensor VCC pin is connected to motor driver 5v pin.
    - Do the same for other IR sensor but make sure that OUT pin is connected to motor driver A2.
 
-4. Connect the servo motor to motor driver servo1 slot.
+4. Connect the **servo motor** to **motor driver servo1 slot**.
 
-5. Connect ultrasonic sensor to motor driver.
+5. Connect **ultrasonic sensor** to **motor driver**.
 
    - Hc-sr04 TRIG pin to motor driver A5.
    - Hc-sr04 ECHO pin to motor driver A4.
@@ -51,18 +51,6 @@ This project involves building an obstacle-avoidance line-following robot using 
 
    - Connect the Arduino uno to pc via USB cable and open the Arduino IDE, select the Arduino board, and com port from the tool menu after that upload the given code.
      
-1. **Ultrasonic Sensor (HC-SR04):**
-   - TRIG pin to Arduino `A5`
-   - ECHO pin to Arduino `A4`
-2. **Infrared Sensors:**
-   - Left sensor to Arduino `A1`
-   - Right sensor to Arduino `A2`
-3. **Motors:**
-   - Connect motor 1 to channel 1 of the motor driver.
-   - Connect motor 2 to channel 2 of the motor driver.
-4. **Servo Motor:**
-   - Connect servo signal pin to Arduino pin `10`.
-5. Power connections: Ensure proper voltage and current supply to the motors and sensors.
 
    ```Circuit Diagram```
 
