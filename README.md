@@ -39,7 +39,7 @@ This project involves building an obstacle-avoidance line-following robot using 
 
    ```Circuit Diagram```
 
-   ![![image](https://github.com/user-attachments/assets/f9cc870e-0280-4cd7-9ce0-62f7825633e2)]
+   ![image](https://github.com/user-attachments/assets/f9cc870e-0280-4cd7-9ce0-62f7825633e2)
 
 ### Software Requirements
 - Install the **AFMotor** library for motor control.
