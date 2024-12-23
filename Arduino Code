@@ -12,7 +12,7 @@
 #define irRight A2
 
 // Motor
-#define MAX_SPEED 200
+#define MAX_SPEED 235
 #define MAX_SPEED_OFFSET 20
 
 Servo servo;
@@ -38,52 +38,47 @@ void setup() {
   servo.write(90);  // Initialize servo to middle position
 
   // Set motor speed
-  motor1.setSpeed(120);
-  motor2.setSpeed(120);
+  motor1.setSpeed(235);
+  motor2.setSpeed(235);
 }
 
 void loop() {
+  // Check if both IR sensors are detecting white (no line detected)
   if (digitalRead(irLeft) == 1 && digitalRead(irRight) == 1) {
-    objectAvoid();
-    // Move forward if both sensors are reading white (inactive)
-  }
-  else if (digitalRead(irLeft) == 1 && digitalRead(irRight) == 0) {
-    objectAvoid();
-    Serial.println("Turn Left");
-    // Turn left if left sensor is white and right sensor is black
-    moveLeft();
+    objectAvoid();  // Call object avoidance function if no line detected
   }
   else if (digitalRead(irLeft) == 0 && digitalRead(irRight) == 1) {
-    objectAvoid();
-    Serial.println("Turn Right");
-    // Turn right if left sensor is black and right sensor is white
-    moveRight();
+    // Left sensor detects black (line), right sensor detects white
+    moveRight();  // Reversed turn direction
+  }
+  else if (digitalRead(irLeft) == 1 && digitalRead(irRight) == 0) {
+    // Right sensor detects black (line), left sensor detects white
+    moveLeft();   // Reversed turn direction
   }
   else if (digitalRead(irLeft) == 0 && digitalRead(irRight) == 0) {
-    // Stop if both sensors detect black
+    // Both sensors detect black (line detected under both sensors)
     Stop();
   }
 }
 
 void objectAvoid() {
-  distance = getDistance();
+  distance = getDistance();  // Get the current distance reading
   if (distance <= 15) {
-    // Stop if an object is detected within 15cm
+    // Stop if an object is detected within 15 cm
     Stop();
-    Serial.println("Stop");
+    Serial.println("Stop - Object Detected");
 
     // Look left and right to check for the best direction
     lookLeft();
     lookRight();
     delay(100);
 
+    // If the right side is clearer, move left
     if (rightDistance <= leftDistance) {
-      // If right side is closer, move left
       object = true;
       turn();
       Serial.println("Move Left");
     } else {
-      // If left side is closer, move right
       object = false;
       turn();
       Serial.println("Move Right");
@@ -98,7 +93,7 @@ void objectAvoid() {
 }
 
 int getDistance() {
-  delay(50);
+  delay(50);  // Small delay before taking a reading
   int cm = sonar.ping_cm();
   if (cm == 0) {
     cm = 100;  // Return a large value if no distance is detected
@@ -130,11 +125,6 @@ int lookRight() {
   return rightDistance;
 }
 
-void Stop() {
-  motor1.run(RELEASE);  // Stop left motor
-  motor2.run(RELEASE);  // Stop right motor
-}
-
 void moveForward() {
   motor1.run(FORWARD);  // Move left motor forward
   motor2.run(FORWARD);  // Move right motor forward
@@ -143,6 +133,21 @@ void moveForward() {
 void moveBackward() {
   motor1.run(BACKWARD);  // Move left motor backward
   motor2.run(BACKWARD);  // Move right motor backward
+}
+
+void moveLeft() {
+  motor1.run(FORWARD);   // Left motor forward (reversed direction)
+  motor2.run(BACKWARD);  // Right motor backward
+}
+
+void moveRight() {
+  motor1.run(BACKWARD);  // Left motor backward (reversed direction)
+  motor2.run(FORWARD);   // Right motor forward
+}
+
+void Stop() {
+  motor1.run(RELEASE);  // Stop left motor
+  motor2.run(RELEASE);  // Stop right motor
 }
 
 void turn() {
@@ -154,11 +159,6 @@ void turn() {
     delay(800);
     moveLeft();
     delay(900);
-    if (digitalRead(irRight) == 1) {
-      loop();
-    } else {
-      moveForward();
-    }
   }
   else {
     Serial.println("Turn Left");
@@ -168,20 +168,5 @@ void turn() {
     delay(800);
     moveRight();
     delay(900);
-    if (digitalRead(irLeft) == 1) {
-      loop();
-    } else {
-      moveForward();
-    }
   }
-}
-
-void moveRight() {
-  motor1.run(BACKWARD);  // Left motor backward
-  motor2.run(FORWARD);   // Right motor forward
-}
-
-void moveLeft() {
-  motor1.run(FORWARD);   // Left motor forward
-  motor2.run(BACKWARD);  // Right motor backward
 }
