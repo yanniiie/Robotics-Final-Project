@@ -24,6 +24,33 @@ This project involves building an obstacle-avoidance line-following robot using 
 - Power source (e.g., 2x batteries 3.7V)
 
 ### Circuit Connections
+1. First attach a motor driver shield onto the arduino.
+
+2. Now connect the dc motor's to the l293d motor driver shield.
+
+   - Motor 1 to motor driver M1
+   - Motor 2 to motor driver M2
+
+3. Connect the IR sensor to motor driver.
+
+   - IR sensor OUT pin is connected to motor driver A1 pin.
+   - IR sensor GND pin is connected to motor driver GND pin.
+   - IR sensor VCC pin is connected to motor driver 5v pin.
+   - Do the same for other IR sensor but make sure that OUT pin is connected to motor driver A2.
+
+4. Connect the servo motor to motor driver servo1 slot.
+
+5. Connect ultrasonic sensor to motor driver.
+
+   - Hc-sr04 TRIG pin to motor driver A5.
+   - Hc-sr04 ECHO pin to motor driver A4.
+   - Hc-sr04 5v pin to motor driver 5v.
+   - Hc-sr04 GND pin to motor driver GND.
+
+6. Now after Doing all the connections, it's time to upload the code.
+
+   - Connect the Arduino uno to pc via USB cable and open the Arduino IDE, select the Arduino board, and com port from the tool menu after that upload the given code.
+     
 1. **Ultrasonic Sensor (HC-SR04):**
    - TRIG pin to Arduino `A5`
    - ECHO pin to Arduino `A4`
