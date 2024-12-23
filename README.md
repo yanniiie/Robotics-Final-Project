@@ -48,10 +48,14 @@ This project involves building an obstacle-avoidance line-following robot using 
    - Hc-sr04 GND pin to motor driver GND.
 
 6. Now after Doing all the connections, it's time to upload the code.
+ - Connect the Arduino uno to pc via USB cable and open the Arduino IDE, select the Arduino board, and com port from the tool menu after that upload the given code.
 
-   - Connect the Arduino uno to pc via USB cable and open the Arduino IDE, select the Arduino board, and com port from the tool menu after that upload the given code.
-     
+7. After the code was successfully uploaded. You need to do three things:
+   - Check the motor running direction.
+   -  Calibrating the both IR sensor by rotating it potentiometer for tracking the black line watch the video if you getting any problem.
+   -   Connect the 9v battery and enjoy the Arduino obstacle avoidance line follower robot car.
 
+   
    ```Circuit Diagram```
 
    ![image](https://github.com/user-attachments/assets/f9cc870e-0280-4cd7-9ce0-62f7825633e2)
